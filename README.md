@@ -44,6 +44,36 @@ df = pd.read_csv("jmh-result.csv")
 s = df["Score"]
 s[:4].to_numpy()/s[4:].to_numpy()
 ```
+
+## Fury vs Cbor
+Fury is 1.7 times compression ratio compared to cbor:
+
+```
+furyMediaContentBytes size 332
+furyStructBytes size 70
+jacksonCborMediaContentBytes size 526
+jacksonCborStructBytes size 124
+```
+
+Benchmark:
+- Fury is 14.9x faster than cbor for Struct serialization
+- Fury is 20.1x faster than cbor for Struct deserialization
+- Fury is 3.4x faster than cbor for MediaContent serialization
+- Fury is 9.4x faster than cbor for MediaContent deserialization
+
+```
+Benchmark                                             Mode  Cnt         Score         Error  Units
+JacksonCborBenchmark.furyDeserializeMediaContent     thrpt   15   2318684.260 ±  418410.419  ops/s
+JacksonCborBenchmark.furyDeserializeStruct           thrpt   15  23473857.456 ± 1079190.475  ops/s
+JacksonCborBenchmark.furySerializeMediaContent       thrpt   15   2871536.155 ±  499539.691  ops/s
+JacksonCborBenchmark.furySerializeStruct             thrpt   15  25798974.819 ± 5661244.865  ops/s
+JacksonCborBenchmark.jacksonDeserializeMediaContent  thrpt   15    155926.917 ±   29828.950  ops/s
+JacksonCborBenchmark.jacksonDeserializeStruct        thrpt   15   1165682.751 ±   89508.634  ops/s
+JacksonCborBenchmark.jacksonSerializeMediaContent    thrpt   15    841823.098 ±   38414.841  ops/s
+JacksonCborBenchmark.jacksonSerializeStruct          thrpt   15   2740102.390 ±  181705.982  ops/s
+```
+
+
 ## Fury vs Microstream
 Fury is 5x smaller for serialized binary size at most:
 ```java
@@ -52,7 +82,7 @@ furyStructBytes size 90
 microstream mediaContentBytes size 1527
 microstream structBytes size 120
 ```
-Fury is :
+Fury is much faster:
 ```java
 Benchmark                                                 Mode  Cnt         Score          Error  Units
 MicrostreamBenchmark.furyDeserializeMediaContent         thrpt    3   2082751.515 ±  2638613.695  ops/s
